@@ -4,26 +4,32 @@
     <title>Pong - Settings</title>
     <script type="text/javascript" src="settings.js"></script>
     <link rel="stylesheet" href="style.css" />
-    <link href="icon.svg" rel="icon" />
+    <link href="pong.ico" rel="icon" />
 </head>
 <body onload="onload();">
     <h2>Pong - Settings</h2>
     <div style="background-color:peachpuff; width:400px; margin:auto; box-shadow: #808080 5px 5px;padding:4px;position:relative;">
-        <form action="index.html" method="get" onformchange="formChange();">
-            <label for="playerHeight">Player Height:</label>
+        <form action="pong.html" method="get" onformchange="formChange();">
+            <label for="playerHeight" title="Height of the player's board in pixels">Player Height:</label>
             <input type="number" min="1" max="500" id="playerHeight" name="playerHeight" value="100" /><br />
-            <label for="playerSpeed">Player Speed:</label>
+            <label for="playerSpeed" title="Speed (in pixels) of the players movement">Player Speed:</label>
             <input type="number" id="playerSpeed" name="playerSpeed" min="1" max="20" value="3" /><br />
-            <label for="ballRadius" >Ball Radius:</label>
+            <label for="ballRadius" title="The radius of the ball in pixels" >Ball Radius:</label>
             <input type="number" id="ballRadius" name="ballRadius" value="10" min="1" max="100" /><br />
+            <label for="ballStartVel" title="The speed of the ball (in pixels) that it moves left and right" >Ball Horizontal Speed:</label>
+            <input type="number" id="ballStartVel" name="ballStartVel" value="8" min="-50" max="50" /><br />
 
-            <label for="ai">AI type:</label>
+            <label for="ai" title="AI type (none allows second player)">AI type:</label>
             <select id="ai" name="AI">
-                <option value="none">None</option>
+                <option value="none">None/2players</option>
                 <option value="defensive">Defensive</option>
                 <option value="offensive">Offensive</option>
                 <option value="follow">Follow</option>
-            </select>
+            </select><br />
+            <label for="AIError" title="how wrong the guess of where the ball will hit the ai before a collision (negative and positive)">AI Error:</label>
+            <input type="number" id="AIError" name="AIError" value="800" min="-1000" max="1000"  /><br />
+            <label for="AIDelay" title="the delay (in milliseconds) of how long the ai will wait to react to the players collision" >AI Reaction Delay (ms):</label>
+            <input type="number" id="AIDelay" name="AIDelay" value="550" min="0" max="10000" /><br />
             <br /><br /><br /><br /><br />
             <div style="position:absolute; bottom:10px; margin:auto; left: 0px; right: 0px;">
                 <hr />
@@ -32,5 +38,6 @@
             </div>
         </form>
     </div>
+    <p>*hover over settings labels to see more info</p>
 </body>
 </html>

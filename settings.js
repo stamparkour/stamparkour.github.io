@@ -61,5 +61,9 @@ function reloadValues() {
     $('playerHeight').setAttribute("value", playerHeight);
     $('playerSpeed').setAttribute("value", playerSpeed);
     $('ballRadius').setAttribute("value", ballRadius);
+    $('ballStartVel').setAttribute("value", ballStartVel);
     document.querySelector("#ai").value = AI;
+    $('AIError').setAttribute("value", AIError);
+    $('AIDelay').setAttribute("value", AIDelay);
+
 }

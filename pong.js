@@ -27,7 +27,7 @@ var Wait = 0;
 function onload() {
     settingsToGame();
     const canvas = $('game');
-    ctx = canvas.getContext('2d', { antialias : false, imageSmoothingEnabled : false});
+    ctx = canvas.getContext('2d', { antialias : false});
     width = canvas.width;
     height = canvas.height;
     var updateInterval = setInterval(update, 15);
@@ -40,11 +40,16 @@ function onload() {
     player2 = height / 2 - playerHeight / 2;
 
     reset();
+
+    if(AI != "none") {
+        $("controls").innerText = "W/S OR Up/Down - Player";
+    }
 }
 
 function onclose() {
     gameToCookie();
 }
+
 function parseURL(str) {
     let a = str.split('?');
     if (a.length > 1) {
