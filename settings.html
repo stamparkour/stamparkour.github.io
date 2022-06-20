@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pong - Settings</title>
+    <script type="text/javascript" src="settings.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link href="icon.svg" rel="icon" />
+</head>
+<body onload="onload();">
+    <h2>Pong - Settings</h2>
+    <div style="background-color:peachpuff; width:400px; margin:auto; box-shadow: #808080 5px 5px;padding:4px;position:relative;">
+        <form action="index.html" method="get" onformchange="formChange();">
+            <label for="playerHeight">Player Height:</label>
+            <input type="number" min="1" max="500" id="playerHeight" name="playerHeight" value="100" /><br />
+            <label for="playerSpeed">Player Speed:</label>
+            <input type="number" id="playerSpeed" name="playerSpeed" min="1" max="20" value="3" /><br />
+            <label for="ballRadius" >Ball Radius:</label>
+            <input type="number" id="ballRadius" name="ballRadius" value="10" min="1" max="100" /><br />
+
+            <label for="ai">AI type:</label>
+            <select id="ai" name="AI">
+                <option value="none">None</option>
+                <option value="defensive">Defensive</option>
+                <option value="offensive">Offensive</option>
+                <option value="follow">Follow</option>
+            </select>
+            <br /><br /><br /><br /><br />
+            <div style="position:absolute; bottom:10px; margin:auto; left: 0px; right: 0px;">
+                <hr />
+                <input type="submit" />
+                <input type="button" onclick="resetValues();" id="resetButton" value="Reset" />
+            </div>
+        </form>
+    </div>
+</body>
+</html>

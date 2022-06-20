@@ -1,0 +1,26 @@
+body {
+    font-family: sans-serif;
+    background-color: #FFFFFF;
+    text-align: center;
+    margin: 10px;
+}
+
+#game {
+    background-color: black;
+    
+}
+
+a:link {
+    color: #B050FF;
+    font-weight: bold;
+}
+
+a:visited {
+    color: #A0A0E0;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #1010FF;
+    font-weight: bold;
+}
