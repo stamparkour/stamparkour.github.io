@@ -20,13 +20,15 @@ var ball = {X:0,Y:0};
 var AIDelayCurrent = 0;
 var Wait = 0;
 var socket;
+var playerMissing;
 
 function onload() {
     const canvas = $('game');
     ctx = canvas.getContext('2d', { antialias : false});
-    var updateInterval = setInterval(update, 15);
+    var updateInterval = setInterval(update, 1000/60);
     window.onkeydown = keydown;
     window.onkeyup = keyup;
+    $('score').innerHTML = point1 + ":" + point2;
 }
 
 function connect() {
@@ -37,12 +39,23 @@ function connect() {
     socket.onmessage = function(event) {
         console.log(event.data);
         let gameReg = /game:(\d+)-(\d+)-(\d+)-(\d+)/;
+        let scoreReg = /score:(\d+)-(\d+)/;
         if(gameReg.test(event.data)) {
             let v = gameReg.exec(event.data);
             player1 = v[1];
             player2 = v[2];
             ball.X = v[3];
             ball.Y = v[4];
+            playerMissing = false;
+        }
+        else if(scoreReg.test(event.data)) {
+            let v = scoreReg.exec(event.data);
+            point1 = v[1];
+            point2 = v[2];
+            $('score').innerHTML = point1 + ":" + point2;
+        }
+        else if(event.data == "playermissing") {
+            playerMissing = true;
         }
     };
     socket.onclose = function(event) {
@@ -72,17 +85,28 @@ function update() {
     let move = 0;
     if (controls.W) move -= 1;
     if (controls.S) move += 1;
-    socket.send("move:"+move);
     clear();
 
     //background
-    ctx.fillStyle = 'gray'
+    ctx.fillStyle = 'gray';
     ctx.fillRect(width / 2 - 5, 0, 10, height);
 
-    ctx.fillStyle = 'white'
+    ctx.fillStyle = 'white';
     ctx.fillRect(playerSideOff, player1, playerWidth, playerHeight);//draw player1
     ctx.fillRect(width - playerSideOff - playerWidth, player2, playerWidth, playerHeight);//draw player2
     ctx.fillRect(ball.X - ballRadius, ball.Y - ballRadius, ballRadius * 2, ballRadius * 2);//draw ball
+
+    if(socket && socket.readyState == WebSocket.OPEN) {
+        if(playerMissing) {
+            ctx.fillStyle = 'black';
+            ctx.fillStyle = 'pink';
+            ctx.font = '64px sans-serif';
+            ctx.fillText("PLAYER MISSING", 40,60);
+        }
+        else {
+            socket.send("move:"+move);
+        }
+    }
 }
 
 function clear() {
