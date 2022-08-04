@@ -8,6 +8,7 @@ var ballStartVel;
 var AI;
 var AIError;
 var AIDelay;
+var mobile;
 
 function resetValues() {
     playerHeight = 100;
@@ -15,9 +16,10 @@ function resetValues() {
     playerSideOff = 40;
     ballRadius = 10;
     ballStartVel = 8;
-    AI = "none";
+    AI = "defensive";
     AIError = 800;
     AIDelay = 550;
+    mobile = false;
     reloadValues();
 }
 
@@ -47,6 +49,7 @@ function settingsToGame() {
         if ('AI' in v) AI = v.AI;
         if ('AIError' in v) AIError = parseFloat(v.AIError);
         if ('AIDelay' in v) AIDelay = parseFloat(v.AIDelay);
+        if ('mobile' in v) mobile = v.mobile == "true";
     }
 }
 
@@ -65,5 +68,8 @@ function reloadValues() {
     document.querySelector("#ai").value = AI;
     $('AIError').setAttribute("value", AIError);
     $('AIDelay').setAttribute("value", AIDelay);
+    if (mobile) {
+        $('mobile').setAttribute("checked", true);
+    }
 
 }

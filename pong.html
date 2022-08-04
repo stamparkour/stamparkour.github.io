@@ -7,13 +7,24 @@
         <link rel="stylesheet" href="style.css" />
         <link href="pong.ico" rel="icon" />
     </head>
-    <body onload="onload();" onclose="onclose();">
+    <body onload="onload();" onclose="onclose();" onfocus="onPage(true);" onblur="onPage(false);">
         <h1>PONG</h1>
         <h2 id="score"></h2>
-        <canvas id="game" width="600" height="500"></canvas>
+        <div class="grid">
+            <div class="sideGrid">
+                <button id="ButtonUp1" onmousedown="keydown({code: 'KeyW'})" onmouseup="keyup({code: 'KeyW'})" onmouseout="keyup({code: 'KeyW'})">/\</button>
+                <button id="ButtonDown1" onmousedown="keydown({code: 'KeyS'})" onmouseup="keyup({code: 'KeyS'})" onmouseout="keyup({code: 'KeyS'})">\/</button>
+            </div>
+            <canvas id="game" width="600" height="500"></canvas>
+            <div class="sideGrid">
+                <button id="ButtonUp2" onmousedown="keydown({code: 'ArrowUp'})" onmouseup="keyup({code: 'ArrowUp'})" onmouseout="keyup({code: 'ArrowUp'})">/\</button>
+                <button id="ButtonDown2" onmousedown="keydown({code: 'ArrowDown'})" onmouseup="keyup({code: 'ArrowDown'})" onmouseout="keyup({code: 'ArrowDown'})">\/</button>
+            </div>
+        </div>
         <br />
         <a href="settings.html" id="settings-link" class="slight" onclick="toSettings();">Settings</a>
         <a href="index.html" class="slight">Home</a>
-        <p id="controls" class="slight">W/S - Player1<br/>Up/Down - Player2</p>
+        <p id="controls" class="slight">W/S - Player1<br />Up/Down - Player2</p>
+        <p class="slight">Escape - pause</p>
     </body>
 </html>

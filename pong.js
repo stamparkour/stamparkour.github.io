@@ -10,6 +10,8 @@ var playerWidth = 20;
 var playerSpeed = 3;
 var playerSideOff = 40;
 var ballRadius = 10;
+var current = true;
+var mobile = false;
 
 var ctx;
 var worldIdentity;
@@ -26,6 +28,16 @@ var AIDelayCurrent = 0;
 var Wait = 0;
 function onload() {
     settingsToGame();
+
+    if (mobile) {
+        $("ButtonUp1").style.visibility = "visible";
+        $("ButtonDown1").style.visibility = "visible";
+        if (AI == "none") {
+            $("ButtonUp2").style.visibility = "visible";
+            $("ButtonDown2").style.visibility = "visible";
+		}
+	}
+
     const canvas = $('game');
     ctx = canvas.getContext('2d', { antialias : false});
     width = canvas.width;
@@ -65,6 +77,10 @@ function parseURL(str) {
     return null;
 }
 
+function onPage(v) {
+    current = v;
+}
+
 function settingsToGame() {
     let v = parseURL(document.URL);
     console.log(v);
@@ -76,6 +92,7 @@ function settingsToGame() {
         if ('AI' in v) AI = v.AI;
         if ('AIError' in v) AIError = parseFloat(v.AIError);
         if ('AIDelay' in v) AIDelay = parseFloat(v.AIDelay);
+        if ('mobile' in v) mobile = v.mobile;
     }
 }
 
@@ -100,6 +117,7 @@ function keydown(e) {
     if (e.code == 'KeyS') controls.S = true;
     if (e.code == 'ArrowUp') controls.Up = true;
     if (e.code == 'ArrowDown') controls.Down = true;
+    if (e.code == 'Escape') current ^= true;
 }
 
 function keyup(e) {
@@ -111,6 +129,7 @@ function keyup(e) {
 
 function update() {
 
+    if (!current) return;
     var player1Prev = player1;
     var player2Prev = player2;
 
