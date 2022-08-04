@@ -18,7 +18,7 @@ canvas {
 
 .grid {
     display: grid;
-    grid-template-columns: 50px 50% 50px;
+    grid-template-columns: 50px 45% 50px;
     grid-column-gap: 20px;
     justify-content: center;
 }
