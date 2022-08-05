@@ -18,14 +18,14 @@ canvas {
 
 .grid {
     display: grid;
-    grid-template-columns: 80px 43% 80px;
-    grid-column-gap: 20px;
+    grid-template-columns: 90px 43% 90px;
+    grid-column-gap: 18px;
     justify-content: center;
 }
 
 .sideGrid {
     display:grid;
-    grid-template-rows: 2fr 1fr 1fr 2fr;
+    grid-template-rows: 3fr 2fr 2fr 3fr;
 }
 #ButtonUp1, #ButtonUp2 {
     grid-row: 2 / 3;
@@ -36,10 +36,17 @@ canvas {
     visibility: hidden;
 }
 
+.uiButton {
+    background-color: #e0e0e0;
+    margin: 2px;
+    border-radius: 10px;
+    border-width: 5px;
+    border-color: #a0a0a0;
+}
+
 
 #game {
     background-color: black;
-    
 }
 
 a.slight:link {
