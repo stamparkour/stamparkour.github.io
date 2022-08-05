@@ -16,6 +16,14 @@ canvas {
     color: #6d6d6d;
 }
 
+.disable-select {
+    user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
 .grid {
     display: grid;
     grid-template-columns: 90px 43% 90px;
@@ -42,6 +50,8 @@ canvas {
     border-radius: 10px;
     border-width: 5px;
     border-color: #a0a0a0;
+    font-size: 30px;
+    font-weight: 700
 }
 
 

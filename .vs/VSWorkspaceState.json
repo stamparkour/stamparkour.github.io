@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\pong"
   ],
-  "SelectedNode": "\\pong.js",
+  "SelectedNode": "\\pong\\pong.js",
   "PreviewInSolutionExplorer": false
 }

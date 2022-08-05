@@ -6,19 +6,20 @@
         <script type="text/javascript" src="pong.js"></script>
         <link rel="stylesheet" href="style.css" />
         <link href="pong.ico" rel="icon" />
+        <meta user-scalable=no />
     </head>
     <body onload="onload();" onclose="onclose();" onfocus="onPage(true);" onblur="onPage(false);">
         <h1>PONG</h1>
         <h2 id="score"></h2>
-        <div class="grid">
+        <div class="grid disable-select">
             <div class="sideGrid">
-                <button id="ButtonUp1" class="uiButton" ontouchstart="keydown({code: 'KeyW'})" ontouchend="keyup({code: 'KeyW'})" onmousedown="keydown({code: 'KeyW'})" onmouseup="keyup({code: 'KeyW'})" onmouseout="keyup({code: 'KeyW'})">/\</button>
-                <button id="ButtonDown1" class="uiButton" ontouchstart="keydown({code: 'KeyS'})" ontouchend="keyup({code: 'KeyS'})" onmousedown="keydown({code: 'KeyS'})" onmouseup="keyup({code: 'KeyS'})" onmouseout="keyup({code: 'KeyS'})">\/</button>
+                <button id="ButtonUp1" class="uiButton" ontouchstart="keydown({code: 'KeyW'})" ontouchend="keyup({code: 'KeyW'})" onmousedown="keydown({code: 'KeyW'})" onmouseup="keyup({code: 'KeyW'})" onmouseout="keyup({code: 'KeyW'})">&uarr;</button>
+                <button id="ButtonDown1" class="uiButton" ontouchstart="keydown({code: 'KeyS'})" ontouchend="keyup({code: 'KeyS'})" onmousedown="keydown({code: 'KeyS'})" onmouseup="keyup({code: 'KeyS'})" onmouseout="keyup({code: 'KeyS'})">&darr;</button>
             </div>
             <canvas id="game" width="600" height="500"></canvas>
             <div class="sideGrid">
-                <button id="ButtonUp2" class="uiButton" ontouchstart="keydown({code: 'ArrowUp'})" ontouchend="keyup({code: 'ArrowUp'})" onmousedown="keydown({code: 'ArrowUp'})" onmouseup="keyup({code: 'ArrowUp'})" onmouseout="keyup({code: 'ArrowUp'})">/\</button>
-                <button id="ButtonDown2" class="uiButton" ontouchstart="keydown({code: 'ArrowDown'})" ontouchend="keyup({code: 'ArrowDown'})" onmousedown="keydown({code: 'ArrowDown'})" onmouseup="keyup({code: 'ArrowDown'})" onmouseout="keyup({code: 'ArrowDown'})">\/</button>
+                <button id="ButtonUp2" class="uiButton" ontouchstart="keydown({code: 'ArrowUp'})" ontouchend="keyup({code: 'ArrowUp'})" onmousedown="keydown({code: 'ArrowUp'})" onmouseup="keyup({code: 'ArrowUp'})" onmouseout="keyup({code: 'ArrowUp'})">&uarr;</button>
+                <button id="ButtonDown2" class="uiButton" ontouchstart="keydown({code: 'ArrowDown'})" ontouchend="keyup({code: 'ArrowDown'})" onmousedown="keydown({code: 'ArrowDown'})" onmouseup="keyup({code: 'ArrowDown'})" onmouseout="keyup({code: 'ArrowDown'})">&uarr;</button>
             </div>
         </div>
         <br />
