@@ -300,7 +300,7 @@ function submitForm() {
 
 	form.buttons.forEach((v, i) => { if (v.checked) { selected = i; v.checked = false; } });
 	if (selected >= 0) quest.applyEffect(selected);
-
+	else if (!quest) return;
 	quest = questions[Math.floor(Math.random() * questions.length)];
 	quest.apply();
 
