@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>TEST</title>
+        <script type="text/javascript" src="java.js"></script>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body onload="init();">
+        <div id="stateStatus" class="stateStatus hidden hidden">
+            <div class="stateElement">Democrats</div>
+            <div id="stateStatusDemocrat" class="stateElement">votes</div>
+            <div class="stateElement">Republican</div>
+            <div id="stateStatusRepublican" class="stateElement">votes</div>
+            <div class="stateElement">Other</div>
+            <div id="stateStatusOther" class="stateElement">votes</div>
+        </div>
+        <div id="stateGrid" class="stateGrid">
+            <div class="stateTitle">State</div>
+            <div class="stateTitle">Winner</div>
+            <div class="stateElement">New York</div>
+            <div id="newYork" class="stateElement"></div>
+            <div class="stateElement">Georgia</div>
+            <div id="georgia" class="stateElement"></div>
+            <div class="stateElement">Florida</div>
+            <div id="florida" class="stateElement"></div>
+            <div class="stateElement">Ohio</div>
+            <div id="ohio" class="stateElement"></div>
+            <div class="stateElement">Massachussetts</div>
+            <div id="massachussetts" class="stateElement"></div>
+            <div class="stateElement">Total</div>
+            <div id="total" class="stateElement"></div>
+        </div>
+
+        <form>
+            <label id="question">Question</label><br /><br />
+            <input class="button" type="radio" name="answer" />
+            <label class="buttonOption">A</label><br />
+            <input class="button" type="radio" name="answer" />
+            <label class="buttonOption">B</label><br />
+            <input class="button" type="radio" name="answer" />
+            <label class="buttonOption">C</label><br />
+            <input class="button" type="radio" name="answer" />
+            <label class="buttonOption">D</label><br />
+            <br />
+            <input id="questionSubmit" type="button" value="Submit"/>
+        </form>
+    </body>
+</html>

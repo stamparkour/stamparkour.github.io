@@ -1,0 +1,37 @@
+body {
+    font-family: sans-serif;
+}
+
+.stateStatus {
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    border: 2px solid gray;
+}
+
+.stateGrid {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    border: 4px solid gray;
+}
+
+.hidden {
+    display: none;
+    position: absolute;
+}
+
+
+.stateTitle {
+    border: 1px solid lightgray;
+    font-weight: 600;
+}
+
+.stateElement {
+    border: 1px solid lightgray;
+}
