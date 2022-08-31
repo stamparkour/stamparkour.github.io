@@ -265,6 +265,11 @@ var questions = [
 			"newEngland:democrat:+0.1, florida:republican:+0.2",
 			"south:democrat:+0.02, all:other:+0.3",
 		]),
+	new Question("Do you like guns", ["perhaps", "no"],
+		[
+			"all:republican:+0.2, florida:republican:+0.1, north:republican:-0.15",
+			"newEngland:democrat:+0.1, florida:democrat:+0.2, east:other:+0.1",
+		]),
 ];
 
 function init() {
@@ -300,7 +305,7 @@ function submitForm() {
 
 	form.buttons.forEach((v, i) => { if (v.checked) { selected = i; v.checked = false; } });
 	if (selected >= 0) quest.applyEffect(selected);
-	else if (!quest) return;
+	else if (quest) return;
 	quest = questions[Math.floor(Math.random() * questions.length)];
 	quest.apply();
 
