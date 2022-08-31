@@ -110,6 +110,9 @@ class State {
 
 		this.element.addEventListener("mouseenter", (event) => { checkState(event, this) });
 		this.element.addEventListener("mouseleave", (event) => { checkStateLeave(event, this) });
+
+		this.element.addEventListener("touchstart", (event) => { checkState(event, this) });
+		this.element.addEventListener("touchstart", (event) => { checkStateLeave(event, this) });
 	}
 
 	set other(v) {
@@ -205,6 +208,8 @@ class StateTotal {
 
 		this.element.addEventListener("mouseenter", (event) => { checkState(event, this) });
 		this.element.addEventListener("mouseleave", (event) => { checkStateLeave(event, this) });
+		this.element.addEventListener("touchstart", (event) => { checkState(event, this) });
+		this.element.addEventListener("touchstart", (event) => { checkStateLeave(event, this) });
 	}
 	get other() {
 		return this.votes - (this.democrat + this.republican);
