@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Blackjack</title>
+        <link  rel="stylesheet" type="text/css", href="style.css">
+        <script src="main.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <label class="container-header">Scoreboard</label>
+
+            <label>Player Score: </label>
+            <input type="text" id="score-player" class="textbox" readonly value="0">
+            <label>Dealer Score: </label>
+            <input type="text" id="score-dealer" class="textbox" readonly value="0">
+        </div>
+        <br>
+        <div class="container" id="dealer">
+            <label class="container-header">Dealer's Hand</label>
+            <label id="dealer-total">Total: ?</label>
+            <br>
+        </div>
+        <br>
+        <div class="container" id="player">
+            <label class="container-header">Player's Hand</label>
+            <label id="player-total">Total: ?</label>
+            <br>
+        </div>
+        <div class="button-container">
+            <button type="button" id="button-deal">Deal</button>
+            <button type="button" id="button-hit" disabled>Hit</button>
+            <button type="button" id="button-stay" disabled>Stay</button>
+            <button type="button" id="button-again" disabled>Play Again</button>
+        </div>
+        <br>
+        <div>
+            <label style="font-size: 1.5em;" id="message-board1"></label>
+            <br>
+            <label id="message-board2"></label>
+        </div>
+    </body>
+</html>
