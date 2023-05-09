@@ -363,13 +363,26 @@ let meshRenderDanny = new InstancedMeshRenderer(myMesh, theDanny, shader);
 
 let time = 0;
 let projection = mat4.perspective(mat4.create(), 45, canvas.width/canvas.height, 0.1,250);
-let positionTransform = [];
-for(let i = 0; i < 1000; i++) {
-    positionTransform[i] = new Transform();
-    positionTransform[i].position = vec3.fromValues(Math.random()*200-100, Math.random()*200-100, Math.random()*-250);
-    positionTransform[i].rotate(vec3.fromValues(Math.random()*360, Math.random()*360, Math.random()*360));
-    positionTransform[i].rate = vec3.fromValues(Math.random()*6.29-3.14, Math.random()*6.29-3.14, Math.random()*6.29-3.14);
+
+function getRandomTrans() {
+    let v = new Transform();
+    v.position = vec3.fromValues(Math.random()*200-100, Math.random()*200-100, Math.random()*-250);
+    v.rotate(vec3.fromValues(Math.random()*360, Math.random()*360, Math.random()*360));
+    v.rate = vec3.fromValues(Math.random()*6.29-3.14, Math.random()*6.29-3.14, Math.random()*6.29-3.14);
+    return v;
 }
+
+let positionTransform = [];
+for(let i = 0; i < 100; i++) {
+    positionTransform.push(getRandomTrans());    
+}
+
+document.onkeydown = (ev) => {
+    if(ev.code == "Space") {
+        positionTransform.push(getRandomTrans()); 
+    }
+}
+
 setInterval(() => {
     theDanny.uniformPara[0].value = projection;
 
