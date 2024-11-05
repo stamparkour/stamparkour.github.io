@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connections</title>
+    <style>
+        body {
+            background-color: #494c57;
+            padding: 0;
+            margin: 0;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .background {
+            display: block;
+            padding-top: 1in;
+            padding-bottom: 1in;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3em;
+            padding-bottom: 0.2in;
+        }
+        input[type="submit"] {
+            background-color: #494d5a;
+            color:white;
+            border-style: solid;
+            border-radius: 0.5em;
+            padding: 4px;
+            border-width: 2px;
+            border-color: #242c42;
+        }
+        input[type="submit"]:hover {
+            background-color: #636774;
+            text-shadow: 1px 1px 1px #242c42, 0px 0px 1px #242c42;
+            box-shadow: 0 0 2px #242c42;
+        }
+        input[type="submit"][disabled] {
+            background-color: #494d5a;
+            color: gray;
+        }
+        input[type="submit"]:hover {
+            background-color: #494d5a;
+            text-shadow: none;
+            box-shadow: none;
+        }
+        input[type="text"] {
+            background-color: #35373d;
+            color:white;
+        }
+        p {
+            left: 0;
+            right: 0;
+            margin: auto;
+            padding: 1em 3em;
+            font-style: italic;
+            color: rgb(171, 195, 196);
+            width:30em;
+        }
+        label#invalid {
+            color:red;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <h1 id="sampleWord">Connections</h1>
+        <form autocomplete="off" id="textForm">
+            <input type="text" name="textInput">
+            <input type="submit" name="textSubmit">
+            <br><br>
+            <label id="invalid" name="invalid" hidden>*Invalid Response</label>
+        </form>
+    </div>
+    <p>
+        Please respond to the given prompt with a word or phrase that relates to it - a person, place, idea, thing, etc.
+    </p>
+    
+    <script>
+function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+
+var form = document.getElementById("textForm");
+form.onsubmit = (event) => {
+    let value = form.textInput.value;
+    form.textInput.disabled = true;
+    form.textSubmit.disabled = true;
+    setTimeout(() => {
+        let obj = {};
+        obj.type = "formSubmit";
+        obj.current = currentWord;
+        obj.response = value;
+        let msg = JSON.stringify(obj);
+        socket.send(msg);
+    }, 400);
+    return false;
+};
+
+var socket = new WebSocket("http://127.0.0.1:9512", "stamp.connection");
+let invalidTxt = document.getElementById("invalid");
+var currentWord = "";
+socket.onerror = (event) => {
+    console.info("socket error");
+    document.getElementById("sampleWord").innerText = "Cannot Connect To Server";
+}
+socket.onmessage = (event) => {
+    let msg = event.data;
+    console.info("socket message: \n" + msg);
+    let obj = JSON.parse(msg);
+    if(obj.type === "init") {
+        obj.text = capitalizeFirstLetter(obj.text);
+        document.getElementById("sampleWord").innerText = obj.text;
+        currentWord = obj.text;
+        form.textInput.value = "";
+        form.textInput.disabled = false;
+        form.textSubmit.disabled = false;
+        invalidTxt.hidden = true;
+    }
+    if(obj.type === "invalid") {
+        form.textInput.value = "";
+        form.textInput.disabled = false;
+        form.textSubmit.disabled = false;
+        invalidTxt.hidden = false;
+    }
+}
+
+    </script>
+</body>
+</html>
