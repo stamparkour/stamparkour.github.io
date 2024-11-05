@@ -100,7 +100,7 @@ form.onsubmit = (event) => {
     return false;
 };
 
-var socket = new WebSocket("http://127.0.0.1:9512", "stamp.connection");
+var socket = new WebSocket("http://server.stamparkour.com:9501/websocket/", "stamp.connection");
 let invalidTxt = document.getElementById("invalid");
 var currentWord = "";
 socket.onerror = (event) => {
