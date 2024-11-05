@@ -110,7 +110,7 @@ form.onsubmit = (event) => {
     return false;
 };
 
-var socket = new WebSocket("ws://server.stamparkour.com:9506/websocket/", "stamp.connection");
+var socket = new WebSocket("wss://server.stamparkour.com:9506/websocket/", "stamp.connection");
 let invalidTxt = document.getElementById("invalid");
 var currentWord = "";
 socket.onerror = (event) => {
