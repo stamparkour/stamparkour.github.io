@@ -26,25 +26,25 @@
             font-size: 3em;
             padding-bottom: 0.2in;
         }
-        input[type="submit"] {
+        input[type="submit"], input[type="button"] {
             background-color: #494d5a;
             color:white;
             border-style: solid;
             border-radius: 0.5em;
             padding: 4px;
             border-width: 2px;
-            border-color: #242c42;
+            border-color: #2e3547;
         }
-        input[type="submit"]:hover {
+        input[type="submit"]:hover, input[type="button"]:hover {
             background-color: #636774;
             text-shadow: 1px 1px 1px #242c42, 0px 0px 1px #242c42;
             box-shadow: 0 0 2px #242c42;
         }
-        input[type="submit"][disabled] {
+        input[type="submit"][disabled], input[type="button"][disabled] {
             background-color: #494d5a;
             color: gray;
         }
-        input[type="submit"]:hover {
+        input[type="submit"][disabled]:hover, input[type="button"][disabled]:hover {
             background-color: #494d5a;
             text-shadow: none;
             box-shadow: none;
@@ -53,15 +53,36 @@
             background-color: #35373d;
             color:white;
         }
-        p {
+        @keyframes msgAnim {
+        from {box-shadow: 0 0 20px #bfe3ff;color:white;}
+        to {box-shadow: 0 0 0px #bfe3ff;color: rgb(185, 185, 185);}
+        }
+        p.msg {
             left: 0;
             right: 0;
             bottom: 0in;
             margin: auto;
+            padding: 10px;
             font-style: italic;
-            color: rgb(171, 195, 196);
+            box-shadow: 0 0 20px #bfe3ff;
+            color:white;
+            border-radius: 10px;
             width:20em;
             position: relative;
+            animation-name: msgAnim;
+            animation-timing-function: ease-in;
+            animation-delay: 4s;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+        form#textForm {
+            left: 0;
+            right: 0;
+            margin: auto;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0 0 5px #383838;
+            width:20em;
         }
         label#invalid {
             color:red;
@@ -73,14 +94,16 @@
     <div class="background">
         <h1 id="sampleWord">Connecting...</h1>
         <form autocomplete="off" id="textForm">
-            <input type="text" name="textInput" maxlength="20" disabled>
-            <input type="submit" name="textSubmit" disabled>
+            <input type="text" name="textInput" maxlength="20">
+            <input type="button" name="textSubmit" value="Submit" disabled><br><br>
+            <input type="button" name="skip" value="Skip" disabled>
+            <input type="button" name="report" value="Report" disabled>
             <br><br>
             <label id="invalid" name="invalid" hidden>*Invalid Response</label>
         </form>
     </div>
-    <p>
-        Please respond to the given prompt with a word or phrase that relates to it - a person, place, idea, thing, etc.
+    <p class="msg">
+        Please respond to the prompt at the top of your screen with a relevant word or phrase, such as a person, place, thing, or idea.
     </p>
     
     <script>
@@ -93,12 +116,38 @@ window.mobileCheck = function() {
   return check;
 };
 
-try {
-    var form = document.getElementById("textForm");
-form.onsubmit = (event) => {
+var form = document.getElementById("textForm");
+ 
+form.skip.onclick = (event) => {
     let value = form.textInput.value;
-    form.textInput.disabled = true;
     form.textSubmit.disabled = true;
+    form.skip.disabled = true;
+    form.report.disabled = true;
+    setTimeout(() => {
+        let obj = {};
+        obj.type = "skip";
+        let msg = JSON.stringify(obj);
+        socket.send(msg);
+    }, 100);
+};
+form.report.onclick = (event) => {
+    let value = form.textInput.value;
+    form.textSubmit.disabled = true;
+    form.skip.disabled = true;
+    form.report.disabled = true;
+    setTimeout(() => {
+        let obj = {};
+        obj.type = "report";
+        obj.text = currentWord;
+        let msg = JSON.stringify(obj);
+        socket.send(msg);
+    }, 400);
+};
+form.onsubmit = form.textSubmit.onclick = (event) => {
+    let value = form.textInput.value;
+    form.textSubmit.disabled = true;
+    form.skip.disabled = true;
+    form.report.disabled = true;
     setTimeout(() => {
         let obj = {};
         obj.type = "formSubmit";
@@ -110,7 +159,7 @@ form.onsubmit = (event) => {
     return false;
 };
 
-var socket = new WebSocket("wss://server.stamparkour.com:9506/websocket/", "stamp.connection");
+var socket = new WebSocket("ws://server.stamparkour.com:9506/websocket/", ["stamp.connection", "aaa"]);
 let invalidTxt = document.getElementById("invalid");
 var currentWord = "";
 socket.onerror = (event) => {
@@ -126,20 +175,18 @@ socket.onmessage = (event) => {
         document.getElementById("sampleWord").innerText = obj.text;
         currentWord = obj.text;
         form.textInput.value = "";
-        form.textInput.disabled = false;
         form.textSubmit.disabled = false;
+        form.skip.disabled = false;
+        form.report.disabled = false;
         invalidTxt.hidden = true;
     }
     if(obj.type === "invalid") {
         form.textInput.value = "";
-        form.textInput.disabled = false;
         form.textSubmit.disabled = false;
+        form.skip.disabled = false;
+        form.report.disabled = false;
         invalidTxt.hidden = false;
     }
-}
-}
-catch (e) {
-    document.writeln(e);
 }
 
     </script>
