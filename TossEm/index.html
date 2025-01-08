@@ -6,6 +6,24 @@
         <link  rel="stylesheet" type="text/css", href="style.css">
     </head>
     <body>
+        <div id="gameBoard">
+            <div id="player1"></div>
+            <div id="player2"></div>
+            <div id="player3" playerTurn></div>
+            <div id="player4"></div>
+            
+            <div id="deckPile"></div>
+            <div id="discardPile"></div>
+            <div id="drawPile"></div>
+            <div id="cardDisplay"></div>
+        </div>
+        <div id="buttonPanel">
+            <button id="buttonStart">Start Game</button>
+            <button id="buttonDeal">Deal</button>
+            <button id="buttonDraw">Draw Card</button>
+            <button id="buttonHitSuit">Hit Suit</button>
+            <button id="buttonHitRank">Hit Rank</button>
+        </div>
         <script src="main.js"></script>
     </body>
 </html>
