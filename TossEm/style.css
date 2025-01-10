@@ -26,11 +26,11 @@ div#player1, div#player2, div#player3, div#player4 {
 	text-align: center;
 	position: absolute;
 }
-div#player1[playerActive], div#player2[playerActive], div#player3[playerActive], div#player4[playerActive] {
+div#player1[playerActive="true"], div#player2[playerActive="true"], div#player3[playerActive="true"], div#player4[playerActive="true"] {
 	outline: gold solid 2px;
 	box-shadow: inset gold 0px 0px 20px; 
 }
-div#player1[playerTurn], div#player2[playerTurn], div#player3[playerTurn], div#player4[playerTurn] {
+div#player1[playerTurn="true"], div#player2[playerTurn="true"], div#player3[playerTurn="true"], div#player4[playerTurn="true"] {
 	background-color: #005800;
 }
 div#player1 {
@@ -110,4 +110,11 @@ div#cardDisplay {
 }
 .cardSelect {
 	transform: translateY(-0.1in);
+}
+
+span#message {
+	color: white;
+}
+[visibility="false"] {
+	display: none;
 }

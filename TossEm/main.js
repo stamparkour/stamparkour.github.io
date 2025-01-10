@@ -8,17 +8,17 @@ function setupGameDimensions() {
     gameLeft = rect.left;
     gameTop = rect.top;
     rect = document.getElementById("player1").getBoundingClientRect();
-    player1X = rect.left + rect.width / 2 - gameLeft;
-    player1Y = rect.top + rect.height / 2- gameTop;
+    playerX[0] = rect.left + rect.width / 2 - gameLeft;
+    playerY[0] = rect.top + rect.height / 2- gameTop;
     rect = document.getElementById("player2").getBoundingClientRect();
-    player2X = rect.left + rect.width / 2 - gameLeft;
-    player2Y = rect.top + rect.height / 2- gameTop;
+    playerX[1] = rect.left + rect.width / 2 - gameLeft;
+    playerY[1] = rect.top + rect.height / 2- gameTop;
     rect = document.getElementById("player3").getBoundingClientRect();
-    player3X = rect.left + rect.width / 2 - gameLeft;
-    player3Y = rect.top + rect.height / 2- gameTop;
+    playerX[2] = rect.left + rect.width / 2 - gameLeft;
+    playerY[2] = rect.top + rect.height / 2- gameTop;
     rect = document.getElementById("player4").getBoundingClientRect();
-    player4X = rect.left + rect.width / 2 - gameLeft;
-    player4Y = rect.top + rect.height / 2- gameTop;
+    playerX[3]= rect.left + rect.width / 2 - gameLeft;
+    playerY[3] = rect.top + rect.height / 2- gameTop;
     rect = document.getElementById("drawPile").getBoundingClientRect();
     playFieldX = rect.left + rect.width / 2 - gameLeft;
     playFieldY = rect.top + rect.height / 2 - gameTop;
@@ -29,16 +29,11 @@ var gameWidth;
 var gameHeight;
 var CardWidth;
 var CardHeight;
-var player1X;
-var player1Y;
-var player2X;
-var player2Y;
-var player3X;
-var player3Y;
-var player4X;
-var player4Y;
+var playerX = [];
+var playerY = [];
 var playFieldX;
 var playFieldY;
+var WebsocketServer = "http://server.stamparkour.com:9500/psw/";
 setupGameDimensions();
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -55,11 +50,11 @@ class Card {
     constructor(rank, suit, src, backSrc) {
         this.#depth = 0;
         this.#isSelected = false;
-        this.#isShown = true;
+        this.#isShown = false;
         this.rank = rank;
         this.suit = suit;
         this.img = new Image();
-        this.img.src = src;
+        this.img.src = backSrc;
         this.img.classList.add("playingCard");
         document.getElementById("cardDisplay").appendChild(this.img);
         this.src = src;
@@ -151,7 +146,7 @@ function createDeck() {
     ];
     for(let i = 0; i < suit.length; i++) {
         for(let j = 0; j < label.length; j++) {
-            deck[i*label.length+j] = new Card(label[i], suit[j], `cards_png/PNG/${label[j]}${suit[i]}.png`, `cards_png/PNG/red_back.png`);
+            deck[i*label.length+j] = new Card(label[j], suit[i], `cards_png/PNG/${label[j]}${suit[i]}.png`, `cards_png/PNG/red_back.png`);
         }
     }
     return deck;
@@ -166,7 +161,7 @@ function createRoyalsDeck() {
     ];
     for(let i = 0; i < suit.length; i++) {
         for(let j = 0; j < label.length; j++) {
-            deck[i*label.length+j] = new Card(label[i], suit[j], `cards_png/PNG/${label[j]}${suit[i]}.png`, `cards_png/PNG/red_back.png`);
+            deck[i*label.length+j] = new Card(label[j], suit[i], `cards_png/PNG/${label[j]}${suit[i]}.png`, `cards_png/PNG/red_back.png`);
         }
     }
     return deck;
@@ -226,6 +221,14 @@ class PSWHost {
         }
         this.#socket.onopen = (ev) => {
             console.log("[PSWHOST] open");
+            let interval = setInterval(() => {
+                if(this.#socket.readyState != WebSocket.OPEN) {
+                    clearInterval(interval);
+                    return;
+                }
+                this.#socket.send("ping");
+                console.log("[PSWHOST] ping");
+            }, 6000);
         }
         this.#socket.onmessage = (ev) => {
             console.log("[PSWHOST] message", ev.data);
@@ -245,6 +248,9 @@ class PSWHost {
                 });
                 console.log("[PSWHOST] data", d);
                 this.#socket.send(d);
+            }
+            else if(ev.data == "pong") {
+                return;
             }
             else {
                 this.#data = JSON.parse(ev.data);
@@ -319,6 +325,14 @@ class PSWClient {
         }
         this.#socket.onopen = (ev) => {
             console.log("[PSWCLIENT] open");
+            let interval = setInterval(() => {
+                if(this.#socket.readyState != WebSocket.OPEN) {
+                    clearInterval(interval);
+                    return;
+                }
+                this.#socket.send("ping");
+                console.log("[PSWCLIENT] ping");
+            }, 6000);
         }
         this.#socket.onmessage = (ev) => {
             console.log("[PSWCLIENT] message", ev.data);
@@ -328,6 +342,10 @@ class PSWClient {
                 console.log("[PSWCLIENT] data", d);
                 this.#socket.send(d);
                 if(settings.onopen) settings.onopen(ev);
+            }
+            else if(ev.data == "pong") {
+                console.log("[PSWCLIENT] pong");
+                return;
             }
             else {
                 this.#data = JSON.parse(ev.data);
@@ -383,12 +401,12 @@ function DrawDeck() {
     let y = deckPileRect.top + deckPileRect.height/2 - gameTop;
     let d = [];
     for(let i = deckState.length; i > 0; i--) {
-        d.push(deckState.pop(randInt(0,deckState.length)));
+        d.push(deckState.splice(randInt(0,deckState.length), 1)[0]);
     }
     deckState = d;
     for(let i = 0; i < deckState.length; i++) {
         deckState[i].x = x;
-        deckState[i].y = y-i/3;
+        deckState[i].y = Math.round((y-i/3)*10)/10;
         deckState[i].show = -2;
         deckState[i].depth = i;
         deckState[i].state = "deck";
@@ -418,10 +436,20 @@ function Hand(cardIDs, x, y, handID, visible, click) {
         if(typeof(click) != "undefined") hand[i].click = click;
         hand[i].depth = i;
         hand[i].y = y;
-        hand[i].x = x - hand.length * gap / 2 + i * gap;
+        hand[i].x = Math.round((x - hand.length * gap / 2 + i * gap)*10)/10;
     }
 }
+function getHand(handID) {
+    let hand = [];
+    for(let i = 0; i < deckState.length; i++) {
+        if(deckState[i].state == handID) {
+            hand.push(deckState[i]);
+        }
+    }
+    return hand;
+}
 function Discard(index) {
+    if(deckState[index].state == "discard") return;
     let rect = document.getElementById("discardPile").getBoundingClientRect();
     let x = rect.left + rect.width/2 - gameLeft;
     let y = rect.top + rect.height/2 - gameTop;
@@ -430,6 +458,7 @@ function Discard(index) {
     deckState[index].show = -1;
     deckState[index].depth = discardCount;
     deckState[index].state = "discard";
+    deckState[index].click = -2;
     discardCount++;
 }
 function ApplyState() {
@@ -441,6 +470,39 @@ function ApplyState() {
         if(deckState[i].click != playerID) cardDeck[deckState[i].id].select(false);
     }
 }
+function buttonEnable(settings) {
+    document.getElementById("buttonStart").setAttribute("visibility",""+!!settings.start);
+    document.getElementById("buttonDeal").setAttribute("visibility",""+!!settings.deal);
+    document.getElementById("buttonDraw").setAttribute("visibility",""+!!settings.draw);
+    document.getElementById("buttonHitSuit").setAttribute("visibility",""+!!settings.suit);
+    document.getElementById("buttonHitRank").setAttribute("visibility",""+!!settings.rank);
+}
+function getSelected() {
+    let a = [];
+    for(let i = 0; i < deckState.length; i++) {
+        if(cardDeck[deckState[i].id].isSelected) {
+            a.push(i);
+        }
+    }
+    return a;
+}
+
+const GameState = Object.freeze({
+    Pregame: "pregame",
+    Deal:  "deal",
+    Game: "game",
+    Game2: "game2",
+    Postgame: "postgame"
+});
+const GameAction = Object.freeze({
+    None:  "none",
+    Start:  "start",
+    Deal:  "deal",
+    Draw: "draw",
+    HitSuit: "hitsuit",
+    HitRank: "hitrank"
+});
+
 /**
  * @type {PSWClient}
  */
@@ -459,33 +521,160 @@ function ClientOpen(ev) {
  * @param {PSWData} data 
  */
 function ClientMessage(data) {
-    deckState = data.serverData;
+    document.getElementById("message").innerText = data.serverData.message;
+    deckState = data.serverData.cardState;
+    document.getElementById(`player1`).setAttribute("playerTurn", "false");
+    document.getElementById(`player2`).setAttribute("playerTurn", "false");
+    document.getElementById(`player3`).setAttribute("playerTurn", "false");
+    document.getElementById(`player4`).setAttribute("playerTurn", "false");
+    if(typeof(data.serverData.currentPlayer) == "number") document.getElementById(`player${data.serverData.currentPlayer+1}`).setAttribute("playerTurn", "true");
+    ApplyState();
+    buttonEnable({
+        start:  data.serverData.gameState == GameState.Pregame && playerID == data.serverData.currentPlayer,
+        deal:  data.serverData.gameState == GameState.Deal && playerID == data.serverData.currentPlayer,
+        draw:  (data.serverData.gameState == GameState.Game || data.serverData.gameState == GameState.Game2) && playerID == data.serverData.currentPlayer,
+        suit:  data.serverData.gameState == GameState.Game2 && playerID == data.serverData.currentPlayer,
+        rank:  data.serverData.gameState == GameState.Game2 && playerID == data.serverData.currentPlayer
+    });
 }
 function ServerOpen(guid, ev) {
-    client = new PSWClient("http://127.0.0.1:9500/psw/", guid, {onopen: ClientOpen, onmessage: ClientMessage});
+    setTimeout(() => {
+        DrawDeck();
+        host.serverData = {
+            gameState: GameState.Pregame, 
+            message: `GameCode: ${document.location.href}?guid=${host.guid}`,
+            currentPlayer: 0,
+            cardState: deckState,
+        };
+        client = new PSWClient(WebsocketServer, guid, {onopen: ClientOpen, onmessage: ClientMessage});
+    }, 500);
 }
 /**
  * 
  * @param {PSWData} data 
  */
 function ServerMessage(data) {
-    //host.serverData = 
+    let i = data.serverData.currentPlayer;
+    if(!data.clientData[i]) return;
+    if(data.clientData[i].action == GameAction.Deal) {
+        Hand([DrawCard(),DrawCard()],playerX[0],playerY[0], 0, 0,0);
+        Hand([DrawCard(),DrawCard()],playerX[1],playerY[1], 1, 1,1);
+        Hand([DrawCard(),DrawCard()],playerX[2],playerY[2], 2, 2,2);
+        Hand([DrawCard(),DrawCard()],playerX[3],playerY[3], 3, 3,3);
+        let arr = [];
+        for(let i = 0; i < 8; i++) {
+            arr.push(DrawCard());
+        }
+        Hand(arr,playFieldX,playFieldY, -1, -1,-1);
+        host.serverData = {
+            gameState: GameState.Game, 
+            message: `Player 2 Turn`,
+            currentPlayer: 1,
+            dealer: 0,
+            cardState: deckState,
+        };
+    }
+    else if(data.clientData[i].action == GameAction.Draw) {
+        if(data.clientData[i].selectCard[0] === undefined || deckState[data.clientData[i].selectCard[0]].state != -1) return;
+        Hand([data.clientData[i].selectCard[0]],playerX[i],playerY[i], i, i,i);
+        let next = (host.serverData.currentPlayer+1)%4;
+        host.serverData = {
+            gameState: data.serverData.gameState == GameState.Game2 || next == host.serverData.dealer? GameState.Game2 : GameState.Game, 
+            message: `Player ${next+1} Turn`,
+            currentPlayer: next,
+            dealer: host.serverData.dealer,
+            cardState: deckState,
+        };
+    }
+    else if(data.clientData[i].action == GameAction.HitSuit) {
+        if(data.clientData[i].selectCard[0] === undefined || deckState[data.clientData[i].selectCard[0]].state != i) return;
+        let card = cardDeck[deckState[data.clientData[i].selectCard[0]].id];
+        for(let i = 0; i < deckState.length; i++) {
+            if(Number.parseFloat(deckState[i].state) !== undefined && deckState[i].state != -1 && cardDeck[deckState[i].id].suit == card.suit) {
+                Discard(i);
+            }
+        }
+        let next = (host.serverData.currentPlayer+1)%4;
+        host.serverData = {
+            gameState: data.serverData.gameState == GameState.Game2 || next == host.serverData.dealer? GameState.Game2 : GameState.Game, 
+            message: `Player ${next+1} Turn`,
+            currentPlayer: next,
+            dealer: host.serverData.dealer,
+            cardState: deckState,
+        };
+    }
+    else if(data.clientData[i].action == GameAction.HitRank) {
+        if(data.clientData[i].selectCard[0] === undefined || deckState[data.clientData[i].selectCard[0]].state != i) return;
+        let card = cardDeck[deckState[data.clientData[i].selectCard[0]].id];
+        for(let i = 0; i < deckState.length; i++) {
+            if(Number.parseFloat(deckState[i].state) !== undefined && deckState[i].state != -1 && cardDeck[deckState[i].id].rank == card.rank) {
+                Discard(i);
+            }
+        }
+        let next = (host.serverData.currentPlayer+1)%4;
+        host.serverData = {
+            gameState: data.serverData.gameState == GameState.Game2 || next == host.serverData.dealer? GameState.Game2 : GameState.Game, 
+            message: `Player ${next+1} Turn`,
+            currentPlayer: next,
+            dealer: host.serverData.dealer,
+            cardState: deckState,
+        };
+    }
 }
 
 if(!window.location.search) {
-    host = new PSWHost("http://127.0.0.1:9500/psw/", {maxClient: 4, onopen: ServerOpen, onmessage: ServerMessage});
+    host = new PSWHost(WebsocketServer, {maxClient: 4, onopen: ServerOpen, onmessage: ServerMessage});
 }
 else {
-    client = new PSWClient("http://127.0.0.1:9500/psw/", urlParams.get("guid"), {onopen: ClientOpen, onmessage: ClientMessage});
+    client = new PSWClient(WebsocketServer, urlParams.get("guid"), {onopen: ClientOpen, onmessage: ClientMessage});
 }
 
-var gameServerData = {
-    gameState: "pregame", //"dealing" "game" "postgame"
-    currentPlayer: 0,
-    cardState: [],
-
-}
-var clientData {
-    selectCard: [],
-    action: "start deal draw hit suit hit rank"
-}
+document.getElementById("buttonStart").onclick = () => {
+    host.serverData = {
+        gameState: GameState.Deal, //"dealing" "game" "postgame"
+        currentPlayer: 0,
+        dealer: 0,
+        message: "deal",
+        cardState: deckState,
+    }
+};
+document.getElementById("buttonDeal").onclick = () => {
+    client.clientData = {
+        selectCard: [],
+        action: GameAction.Deal
+    };
+    client.clientData = {
+        selectCard: [],
+        action: GameAction.None
+    };
+};
+document.getElementById("buttonDraw").onclick = () => {
+    client.clientData = {
+        selectCard: getSelected(),
+        action: GameAction.Draw
+    };
+    client.clientData = {
+        selectCard: [],
+        action: GameAction.None
+    };
+};
+document.getElementById("buttonHitSuit").onclick = () => {
+    client.clientData = {
+        selectCard: getSelected(),
+        action: GameAction.HitSuit
+    };
+    client.clientData = {
+        selectCard: [],
+        action: GameAction.None
+    };
+};
+document.getElementById("buttonHitRank").onclick = () => {
+    client.clientData = {
+        selectCard: getSelected(),
+        action: GameAction.HitRank
+    };
+    client.clientData = {
+        selectCard: [],
+        action: GameAction.None
+    };
+};
